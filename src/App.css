@@ -1,23 +1,24 @@
 .App {
+  font-family: Arial, sans-serif;
   text-align: center;
 }
 
 .articles-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 20px;
   justify-content: center;
 }
 
 .article-card {
   border: 1px solid #ccc;
+  padding: 20px;
+  width: 300px;
   border-radius: 8px;
-  padding: 16px;
-  max-width: 300px;
-  text-align: left;
 }
 
 .article-card img {
-  max-width: 100%;
+  width: 100%;
+  height: auto;
   border-radius: 8px;
 }

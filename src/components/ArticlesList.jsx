@@ -1,26 +1,22 @@
-import React from 'react';
-import ArticleCard from './ArticleCard';
+import React from "react";
 
 function ArticlesList({ articles }) {
-    return (
-        <div className='"articles-list'>
-            {articles.length ? (
-                articles.map((article) => (
-                    <ArticleCard
-                        key={article.title}
-                        title={article.title}
-                        topic={article.topic}
-                        author={article.author}
-                        votes={article.votes}
-                        commentCount={article.commentCount}
-                        imageUrl={article.article_img_url}
-                    />
-                ))
-            ) : (
-                <p>No articles available</p>
-            )}
+  return (
+    <div className="articles-list">
+      {articles.map((article) => (
+        <div key={article.title} className="article-card">
+          <img src={article.article_img_url} alt={article.title} />
+          <h2>{article.title}</h2>
+          <p>{article.topic}</p>
+          <p>Author: {article.author}</p>
+          <p>{article.body.slice(0, 100)}...</p>
+          <p>Comments: {article.comment_count}</p>
+          <p>Votes: {article.votes}</p>
+          <p>Created at: {new Date(article.created_at).toLocaleString()}</p>
         </div>
-    );
+      ))}
+    </div>
+  );
 }
 
 export default ArticlesList;

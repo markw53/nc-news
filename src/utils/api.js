@@ -1,18 +1,10 @@
-import axios from 'axios';
+import axios from "axios";
 
 const api = axios.create({
-    baseURL: 'https://be-nc-news-nnbf.onrender.com/api',
+  baseURL: "https://be-nc-news-md74.onrender.com/api",
 });
 
-export const fetchArticles = async (query = {}) => {
-    const { author, topic, sort_by = 'created_at', order = 'desc', limit = 10, page = 1 } = query;
-    try {
-        const response = await api.get('/articles', {
-            params: { author, topic, sort_by, order, limit, page }
-        });
-        return response.data.articles;
-    } catch (error) {
-        console.error("Error fetching articles:", error);
-        throw error;
-    }
+export const fetchArticles = () => {
+  return api.get("/articles").then((response) => response.data.articles);
 };
+

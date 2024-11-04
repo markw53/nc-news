@@ -1,30 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import { fetchArticles } from './utils/api';
-import ArticlesList from './components/ArticlesList';
-import './App.css';
+import { useEffect, useState } from "react";
+import { fetchArticles } from "./utils/api";
+import ArticlesList from "./components/ArticlesList";
 
 function App() {
-    const [articles, setArticles] = useState([]);
-    const [error, setError] = useState(null);
+  const [articles, setArticles] = useState([]);
 
-    useEffect(() => {
-        const loadArticles = async () => {
-            try {
-                const articlesData = await fetchArticles();
-                setArticles(articlesData);
-            } catch (err) {
-                setError("Failed to load articles.");
-            }
-        };
-        loadArticles();
-    }, []);
+  useEffect(() => {
+    fetchArticles()
+      .then((fetchedArticles) => {
+        setArticles(fetchedArticles);
+      })
+      .catch((error) => {
+        console.error("Error fetching articles:", error);
+      });
+  }, []);
 
-    return (
-        <div className="App">
-            <h1>Article Viewer</h1>
-            {error ? <p>{error}</p> : <ArticlesList articles={articles} />}
-        </div>
-    );
+  return (
+    <div className="App">
+      <h1>Article List</h1>
+      <ArticlesList articles={articles} />
+    </div>
+  );
 }
 
 export default App;
