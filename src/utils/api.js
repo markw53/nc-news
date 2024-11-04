@@ -8,3 +8,6 @@ export const fetchArticles = () => {
   return api.get("/articles").then((response) => response.data.articles);
 };
 
+export const fetchArticleById = (article_id) => {
+    return api.get(`/articles/${article_id}`).then((response) => response.data.article);
+  };

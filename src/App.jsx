@@ -1,6 +1,8 @@
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { fetchArticles } from "./utils/api";
 import ArticlesList from "./components/ArticlesList";
+import ArticleDetail from "./components/ArticleDetail";
 
 function App() {
   const [articles, setArticles] = useState([]);
@@ -16,10 +18,17 @@ function App() {
   }, []);
 
   return (
-    <div className="App">
-      <h1>Article List</h1>
-      <ArticlesList articles={articles} />
-    </div>
+    <Router>
+      <div className="App">
+        <header>
+          <h1>Article List</h1>
+        </header>
+        <Routes>
+          <Route path="/" element={<ArticlesList articles={articles} />} />
+          <Route path="/articles/:article_id" element={<ArticleDetail />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 

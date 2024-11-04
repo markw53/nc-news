@@ -10,15 +10,27 @@
   justify-content: center;
 }
 
-.article-card {
+.article-card, .article-detail {
   border: 1px solid #ccc;
   padding: 20px;
   width: 300px;
   border-radius: 8px;
 }
 
-.article-card img {
+.article-card img, .article-detail img {
   width: 100%;
   height: auto;
   border-radius: 8px;
+}
+
+.article-detail h2 span {
+  font-weight: normal;
+  color: #666;
+  margin-left: 10px;
+}
+
+.comments-section {
+  margin-top: 20px;
+  padding-top: 10px;
+  border-top: 1px solid #ddd;
 }
