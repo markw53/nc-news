@@ -33,5 +33,11 @@ export const fetchArticleById = (article_id) => {
     });
   };
 
+  export const deleteComment = (comment_id) => {
+    return api.delete(`/comments/${comment_id}`);
+  };
+
   
+
+
 
