@@ -37,7 +37,18 @@ export const fetchArticleById = (article_id) => {
     return api.delete(`/comments/${comment_id}`);
   };
 
-  
+  export const fetchTopics = async () => {
+    const { data } = await api.get(`/topics`);
+    return data.topics;
+};
+
+export const fetchArticlesByTopic = async (topic) => {
+    const { data } = await api.get(`/articles`, {
+      params: { topic },
+    });
+    return data.articles;
+};
+
 
 
 
