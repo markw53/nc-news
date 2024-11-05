@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { fetchArticleById, fetchCommentsByArticleId, voteOnArticle, postComment } from "../utils/api";
+import { fetchArticleById, fetchCommentsByArticleId, voteOnArticle, postComment, deleteComment } from "../utils/api";
 
 function ArticleDetail() {
   const { article_id } = useParams();
@@ -13,6 +13,8 @@ function ArticleDetail() {
   const [newComment, setNewComment] = useState("");
   const [commentError, setCommentError] = useState("");
   const [commentSuccess, setCommentSuccess] = useState("");
+  const [deletingCommentId, setDeletingCommentId] = useState(null);
+  const [deleteMessage, setDeleteMessage] = useState("");
 
   useEffect(() => {
     fetchArticleById(article_id)
@@ -50,6 +52,25 @@ function ArticleDetail() {
       setHasVoted(false);
       setError("Failed to update vote. Please try again.");
     });
+  };
+
+  const handleDeleteComment = (comment_id) => {
+    if (deletingCommentId) return;
+    setDeletingCommentId(comment_id);
+    setDeleteMessage("");
+
+    deleteComment(comment_id)
+      .then(() => {
+        setComments((prevComments) => prevComments.filter((comment) => comment.somment_id !== comment_id));
+        setDeleteMessage("Comment deleted successfully.");
+      })
+      .catch((error) => {
+        console.error("Error deleting comment:", error);
+        setDeleteMessage("Failed to delete comment. Please try again.");
+      })
+      .finally(() => {
+        setDeletingCommentId(null);
+      });
   };
 
   const handleCommentSubmit = (e) => {
@@ -132,6 +153,12 @@ function ArticleDetail() {
                 </p>
                 <p>{comment.body}</p>
                 <p>Votes: {comment.votes}</p>
+                <button
+                    onClick={() => handleDeleteComment(comment.comment_id)}
+                    disabled={deletingCommentId === comment.comment_id}
+                  >
+                    {deletingCommentId === comment.comment_id ? "Deleting..." : "Delete"}
+                  </button>
               </div>
             ))
           ) : (
@@ -139,6 +166,7 @@ function ArticleDetail() {
           )}
         </div>
         )}
+        {deleteMessage && <p className="delete-message">{deleteMessage}</p>}
       </div>
     </div>
   );
