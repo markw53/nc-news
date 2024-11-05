@@ -15,3 +15,9 @@ export const fetchArticleById = (article_id) => {
   export const fetchCommentsByArticleId = (article_id) => {
     return api.get(`/articles/${article_id}/comments`).then((response) => response.data.comments);
   };
+
+  export const voteOnArticle = (article_id, voteChange) => {
+    return api.patch(`/articles/${article_id}`, { inc_votes: voteChange });
+  };
+
+  
