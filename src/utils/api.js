@@ -4,8 +4,15 @@ const api = axios.create({
   baseURL: "https://be-nc-news-md74.onrender.com/api",
 });
 
-export const fetchArticles = () => {
-  return api.get("/articles").then((response) => response.data.articles);
+export const fetchArticles = (page = 1, limit = 6) => {
+  return api
+    .get("/articles", { 
+      params: { limit, p: page },
+    })
+    .then((response) => ({
+      articles: response.data.articles,
+      total_count: parseInt(response.data.total_count),
+    }));
 };
 
 export const fetchArticleById = (article_id) => {
@@ -20,4 +27,3 @@ export const fetchArticleById = (article_id) => {
     return api.patch(`/articles/${article_id}`, { inc_votes: voteChange });
   };
 
-  

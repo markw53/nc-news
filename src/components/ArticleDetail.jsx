@@ -76,9 +76,12 @@ function ArticleDetail() {
 
       <div className="comments-section">
         <h3>Comments</h3>
+        {loadingComments ? (
+          <p>Loading comments...</p>
+        ) : (
         <div className="comments-grid">
           {comments.length > 0 ? (
-            comments.map((comment) => (
+            comments.map(comment => (
               <div key={comment.comment_id} className="comment-card">
                 <p>
                   <strong>{comment.author}</strong>{" "}
@@ -92,6 +95,7 @@ function ArticleDetail() {
             <p>Mo comments yet.</p>
           )}
         </div>
+        )}
       </div>
     </div>
   );
