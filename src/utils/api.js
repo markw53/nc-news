@@ -27,3 +27,11 @@ export const fetchArticleById = (article_id) => {
     return api.patch(`/articles/${article_id}`, { inc_votes: voteChange });
   };
 
+  export const postComment = (article_id, commentBody) => {
+    return api.post(`/articles/${article_id}/comments`, {
+      body: commentBody,
+    });
+  };
+
+  
+
