@@ -1,0 +1,31 @@
+.topics-list {
+    padding: 20px;
+}
+
+.topic-link {
+    display: block;
+    margin: 10px 0;
+    padding: 10px;
+    text-decoration: none;
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.topic-link:hover {
+    background-color: #f0f0f0;
+}
+
+.topic-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.topic-slug {
+    font-weight: bold;
+}
+
+.topic-description {
+    color: #666;
+}
