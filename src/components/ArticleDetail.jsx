@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { fetchArticleById, fetchCommentsByArticleId, voteOnArticle } from "../utils/api";
+import { fetchArticleById, fetchCommentsByArticleId, voteOnArticle, postComment } from "../utils/api";
 
 function ArticleDetail() {
   const { article_id } = useParams();
@@ -10,6 +10,9 @@ function ArticleDetail() {
   const [votes, setVotes] = useState(0);
   const [hasVoted, setHasVoted] = useState(false);
   const [error, setError] = useState(null);
+  const [newComment, setNewComment] = useState("");
+  const [commentError, setCommentError] = useState("");
+  const [commentSuccess, setCommentSuccess] = useState("");
 
   useEffect(() => {
     fetchArticleById(article_id)
@@ -49,6 +52,33 @@ function ArticleDetail() {
     });
   };
 
+  const handleCommentSubmit = (e) => {
+    e.preventDefault();
+
+    if (!newComment) {
+      setCommentError("Comment cannot be empty.");
+      return;
+    }
+
+    const commentData = {
+      body: newComment,
+      author: "Current user"
+    };
+
+    postComment(article_id, commentData)
+      .then((createdComment) => {
+        setComments((prevComments) => [createdComment, ...prevComments]);
+        setNewComment("");
+        setCommentSuccess("Comment posted successfully!");
+        setCommentError("");
+      })
+      .catch((error) => {
+        console.error("Error posting comment:", error);
+        setCommentError("Failed to post comment. Please try again.");
+        setCommentSuccess("");
+      });
+  };
+
   if (!article) return <p>Loading...</p>;
   if (loadingComments) return <p>Loading comments...</p>;
 
@@ -76,9 +106,25 @@ function ArticleDetail() {
 
       <div className="comments-section">
         <h3>Comments</h3>
+        <form onSubmit={handleCommentSubmit} className="comment-form">
+          <textarea
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+            placeholder="Write your comment here..."
+            required
+            className="comment-textarea"
+          />
+          <button type="submit" className="submit-button">Post Comment</button>
+          {commentError && <p className="error">{commentError}</p>}
+          {commentSuccess && <p className="success">{commentSuccess}</p>}
+        </form>
+
+        {loadingComments ? (
+          <p>Loading comments...</p>
+        ) : (
         <div className="comments-grid">
           {comments.length > 0 ? (
-            comments.map((comment) => (
+            comments.map(comment => (
               <div key={comment.comment_id} className="comment-card">
                 <p>
                   <strong>{comment.author}</strong>{" "}
@@ -92,6 +138,7 @@ function ArticleDetail() {
             <p>Mo comments yet.</p>
           )}
         </div>
+        )}
       </div>
     </div>
   );
