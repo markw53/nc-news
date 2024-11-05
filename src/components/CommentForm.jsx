@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { postComment } from '../utils/api';
+import '../App.css';
 
 function CommentForm({ articleId, onCommentPosted }) {
     const [commentBody, setCommentBody] = useState('');
-    const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-    const [submittedComments, setSubmittedComments] = useState(new Set());
-    
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -15,17 +14,11 @@ function CommentForm({ articleId, onCommentPosted }) {
             return;
         }
 
-        if (submittedComments.has(commentBody.trim())) {
-            setErrorMessage("You have already posted this comment.");
-            return;
-        }
-
         try {
-            await postComment(articleId, commentBody);
-            setSuccessMessage("Comment posted successfully!");
-            setSubmittedComments((prev) => new Set(prev).add(commentBody.trim()));
-            setCommentBody('');
-            setErrorMessage('');
+            const newComment = await postComment(articleId, commentBody);
+            onCommentPosted(newComment);  
+            setCommentBody('');           
+            setErrorMessage('');          
         } catch (error) {
             setErrorMessage("Failed to post comment. Please try again.");
         }
@@ -33,27 +26,19 @@ function CommentForm({ articleId, onCommentPosted }) {
 
     return (
         <div>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className='comment-form'>
                 <textarea
                     value={commentBody}
                     onChange={(e) => setCommentBody(e.target.value)}
-                    placeholder='Write your comment here...'
-                    rows="4"
+                    placeholder="Write your comment here..."
                     required
+                    className='comment-textarea'
                 />
-                <button type="submit">Post Comment</button>
+                <button type="submit" className='submit-button'>Post Comment</button>
             </form>
-            {successMessage && <p className='success-message'>{successMessage}</p>}
-            {successMessage && <p className='error-message'>{errorMessage}</p>}
+            {errorMessage && <p className="error-message">{errorMessage}</p>}
         </div>
     );
 }
 
 export default CommentForm;
-
-
-
-
-
-
-}

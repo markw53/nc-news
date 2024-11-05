@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { fetchArticles } from "./utils/api";
 import ArticlesList from "./components/ArticlesList";
 import ArticleDetail from "./components/ArticleDetail";
+import './App.css';
 
 function App() {
   const [articles, setArticles] = useState([]);
