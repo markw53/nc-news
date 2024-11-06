@@ -29,11 +29,11 @@ node --version
 
 1. Clone the repository [here](https://github.com/markw53/nc-news.git)
 
-2. Navigate to the Project Directory: ```bash cd your-repo```
+2. Navigate to the Project Directory: ```cd your-repo```
 
-3. Install Dependencies: ```bash npm install```
+3. Install Dependencies: ```npm install```
 
-4. Start the Development Server: ```bash npm run dev```
+4. Start the Development Server: ```npm run dev```
 
 ## About This Project
 
