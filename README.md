@@ -23,6 +23,7 @@ This project requires **Node v23.x** or higher. To check your Node version, you 
 
 ```bash
 node --version
+```
 
 ## How to run locally
 
@@ -34,35 +35,31 @@ node --version
 
 4. Start the Development Server: npm run dev
 
-About This Project
----
+## About This Project
 
-Project Structure
----
+## Project Structure
 
 The main parts of this application include:
 
-* Topics Page: Displays articles filtered by topic, with options to sort articles.
-* Article Details Page: Allows users to view full article content, post comments, and upvote articles.
-* Error Handling: Provides feedback if an error occurs, such as when an invalid topic or article is accessed.
-* Sorting Controls: Users can sort articles by date, comment count, and votes, with an option to toggle between ascending and descending order.
+- Topics Page: Displays articles filtered by topic, with options to sort articles.
+- Article Details Page: Allows users to view full article content, post comments, and upvote articles.
+- Error Handling: Provides feedback if an error occurs, such as when an invalid topic or article is accessed.
+- Sorting Controls: Users can sort articles by date, comment count, and votes, with an option to toggle between ascending and descending order.
 
-Technology Stack
----
+## Technology Stack
 
-* Front End: React, React Router
-* Back End API: Built with Node.js and Express (link provided above)
-* CSS: Custom styling with modular CSS files
+- Front End: React, React Router
+- Back End API: Built with Node.js and Express (link provided above)
+- CSS: Custom styling with modular CSS files
 
-Error Handling
----
+## Error Handling
 
 Errors are handled gracefully in this application. Users will see helpful messages in the following cases:
 
-* Non-existent Paths: A message appears if a user navigates to a path that doesn’t exist.
-* Non-existent Article or Topic: A user is informed if they attempt to view an article or topic that doesn’t exist.
-* Comment Posting Errors: If required information for a new comment is missing, the user is prompted to provide it.
+- Non-existent Paths: A message appears if a user navigates to a path that doesn’t exist.
+- Non-existent Article or Topic: A user is informed if they attempt to view an article or topic that doesn’t exist.
+- Comment Posting Errors: If required information for a new comment is missing, the user is prompted to provide it.
 
-**Acknowledgments**
+## Acknowledgments
 
 This portfolio project was created as part of a Digital Skills Bootcamp in Software Engineering provided by [Northcoders](https://northcoders.com/)
