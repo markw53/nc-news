@@ -44,3 +44,28 @@
         flex: 1 1 100%;
     }
 }
+
+.sort-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  
+  .sort-controls label {
+    font-weight: bold;
+    margin-right: 8px;
+  }
+  
+  .sort-controls select,
+  .sort-controls button {
+    padding: 8px;
+    font-size: 1rem;
+    flex: 1 1 100px; 
+  }
+  
+  @media (max-width: 480px) {
+    .sort-controls {
+      flex-direction: column; 
+    }
+  }
