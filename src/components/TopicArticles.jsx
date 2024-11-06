@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchArticlesByTopic } from "../utils/api";
 import ArticleCard from "./ArticleCard";
+import "./TopicArticles.css";
 
 function TopicArticles() {
   const { topic } = useParams();
@@ -11,10 +12,10 @@ function TopicArticles() {
 
   useEffect(() => {
     setLoading(true);
-    setError("");
     fetchArticlesByTopic(topic)
-      .then((data) => {
-        setArticles(data.articles);
+      .then((fetchedArticles) => {
+        console.log("Fetched articles:", fetchedArticles);
+        setArticles(fetchedArticles);
         setLoading(false);
       })
       .catch((error) => {
@@ -25,18 +26,20 @@ function TopicArticles() {
   }, [topic]);
 
   if (loading) return <p>Loading articles...</p>;
+  if (error) return <p className="error-message">{error}</p>;
 
   return (
     <div className="topic-articles">
       <h2>Articles on "{topic}"</h2>
-      {error && <p className="error-message">{error}</p>}
-      {articles.length > 0 ? (
-        articles.map((article) => (
-          <ArticleCard key={article.article_id} article={article} />
-        ))
-      ) : (
-        <p>No articles available for this topic.</p>
-      )}
+      <div className="articles-grid">
+        {articles.length > 0 ? (
+          articles.map((article) => (
+            <ArticleCard key={article.article_id} article={article} />
+          ))
+        ) : (
+          <p>No articles available for this topic.</p>
+        )}
+      </div>
     </div>
   );
 }

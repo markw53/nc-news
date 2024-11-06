@@ -38,14 +38,13 @@ export const fetchArticleById = (article_id) => {
   };
 
   export const fetchTopics = async () => {
-    const { data } = await api.get(`/topics`);
-    return data.topics;
+    const response = await api.get(`/topics`);
+    console.log("Fetched topics:", response.data)
+    return response.data;
 };
 
 export const fetchArticlesByTopic = async (topic) => {
-    const { data } = await api.get(`/articles`, {
-      params: { topic },
-    });
+    const { data } = await api.get(`/articles`, { params: { topic } });
     return data.articles;
 };
 
