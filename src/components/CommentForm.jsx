@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { postComment } from '../utils/api';
+import ErrorMessage from './ErrorMessage';
 import '../App.css';
 
 function CommentForm({ articleId, onCommentPosted }) {
     const [commentBody, setCommentBody] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
+    const [error, setError] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (!commentBody.trim()) {
-            setErrorMessage('Comment cannot be empty.');
+            setError('Comment cannot be empty.');
             return;
         }
 
@@ -18,9 +19,9 @@ function CommentForm({ articleId, onCommentPosted }) {
             const newComment = await postComment(articleId, commentBody);
             onCommentPosted(newComment);  
             setCommentBody('');           
-            setErrorMessage('');          
+            setError('');          
         } catch (error) {
-            setErrorMessage("Failed to post comment. Please try again.");
+            setError("Failed to post comment. Please try again.");
         }
     };
 
@@ -36,7 +37,7 @@ function CommentForm({ articleId, onCommentPosted }) {
                 />
                 <button type="submit" className='submit-button'>Post Comment</button>
             </form>
-            {errorMessage && <p className="error-message">{errorMessage}</p>}
+            <ErrorMessage message={error} />
         </div>
     );
 }
