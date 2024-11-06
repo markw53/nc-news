@@ -43,11 +43,21 @@ export const fetchArticleById = (article_id) => {
     return response.data;
 };
 
-export const fetchArticlesByTopic = async (topic) => {
-    const { data } = await api.get(`/articles`, { params: { topic } });
-    return data.articles;
+export const fetchArticlesByTopic = (topic, sortBy = 'created_at', order = 'desc') => {
+  return api
+      .get('/articles', {
+          params: {
+              topic,
+              sort_by: sortBy,
+              order,
+          },
+      })
+      .then((response) => response.data)
+      .catch((error) => {
+          console.error("Error fetching articles by topic:", error);
+          throw error;
+      });
 };
-
 
 
 
