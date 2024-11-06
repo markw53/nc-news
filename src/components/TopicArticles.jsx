@@ -20,7 +20,6 @@ function TopicArticles() {
     setError("");
     fetchArticlesByTopic(topic, sortBy, order)
       .then((fetchedArticles) => {
-        console.log("Fetched articles:", fetchedArticles);
         setArticles(fetchedArticles.articles); 
         setLoading(false);
       })

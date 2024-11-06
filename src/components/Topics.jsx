@@ -11,7 +11,6 @@ function Topics() {
   useEffect(() => {
     fetchTopics()
       .then((data) => {
-        console.log("Data from API:", data);
         setTopics(data.topics || []);
         setLoading(false);
       })
