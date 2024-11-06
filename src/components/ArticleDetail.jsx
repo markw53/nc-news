@@ -5,6 +5,7 @@ import ArticleHeader from "./ArticleHeader";
 import VoteSection from "./VoteSection";
 import CommentForm from "./CommentForm";
 import CommentsList from "./CommentsList";
+import ErrorMessage from "./ErrorMessage";
 
 function ArticleDetail() {
   const { article_id } = useParams();
@@ -27,6 +28,7 @@ function ArticleDetail() {
       })
       .catch((error) => {
         console.error("Error fetching article:", error);
+        setError("Failed to load article. Please try agin later.");
       });
 
     fetchCommentsByArticleId(article_id)
@@ -36,6 +38,7 @@ function ArticleDetail() {
       })
       .catch((error) => {
         console.error("Error fetching comments:", error);
+        setError("Failed to load comments. Please try again later.");
         setLoadingComments(false);
       });
   }, [article_id]);
@@ -69,6 +72,7 @@ function ArticleDetail() {
       .catch((error) => {
         console.error("Error deleting comment:", error);
         setDeleteMessage("Failed to delete comment. Please try again.");
+        setError("Failed to delete comment. Please try again.");
       })
       .finally(() => setDeletingCommentId(null));
   };
@@ -90,6 +94,9 @@ function ArticleDetail() {
   return (
     <div className="article-detail-container">
       <ArticleHeader article={article} />
+
+      <ErrorMessage message={error} />
+
       <VoteSection votes={votes} handleVote={handleVote} hasVoted={hasVoted} error={error} />
       <CommentForm articleId={article_id} onCommentPosted={handleCommentPosted} />
       {commentSuccess && <p className="success-message">{commentSuccess}</p>}

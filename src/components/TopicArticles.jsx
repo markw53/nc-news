@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { fetchArticlesByTopic } from "../utils/api";
 import ArticleCard from "./ArticleCard";
+import ErrorMessage from "./ErrorMessage";
 import "./TopicArticles.css";
 
 function TopicArticles() {
@@ -16,6 +17,7 @@ function TopicArticles() {
 
   useEffect(() => {
     setLoading(true);
+    setError("");
     fetchArticlesByTopic(topic, sortBy, order)
       .then((fetchedArticles) => {
         console.log("Fetched articles:", fetchedArticles);
@@ -28,6 +30,7 @@ function TopicArticles() {
         setLoading(false);
       });
   }, [topic, sortBy, order]); 
+
   const handleSortChange = (e) => {
     setSearchParams({ sort_by: e.target.value, order });
   };
@@ -38,11 +41,12 @@ function TopicArticles() {
   };
 
   if (loading) return <p>Loading articles...</p>;
-  if (error) return <p className="error-message">{error}</p>;
-
+  
   return (
     <div className="topic-articles">
       <h2>Articles on "{topic}"</h2>
+
+      {error && <ErrorMessage message={error} />}
       
       <div className="sort-controls">
         <label htmlFor="sort-by">Sort by:</label>
