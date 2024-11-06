@@ -1,6 +1,6 @@
 # nc-news
 
-[Live Version](https://your-deployed-app-link.com)
+[Live Version](https://markw53-news.netlify.app)
 
 ## General Info
 
