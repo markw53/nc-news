@@ -36,27 +36,40 @@ function ArticlesList() {
   if (loading) return <p>Loading articles...</p>;
 
   return (
-    <div className="articles-list-container">
-      <h1>All Articles</h1>
-      <div className="articles-grid">
+    <section
+      className="articles-list-container"
+      aria-labelledby="all-articles-title"
+    >
+      <h1 id="all-articles-title">All Articles</h1>
+
+      <div className="articles-grid" aria-label="Articles List">
         {articles.map((article) => (
           <ArticleCard key={article.article_id} article={article} />
         ))}
       </div>
-      
-      <div className="pagination-controls">
-        <button onClick={handlePrevPage} disabled={page === 1}>
+
+      <nav className="pagination-controls" aria-label="Pagination">
+        <button
+          onClick={handlePrevPage}
+          disabled={page === 1}
+          aria-label="Previous Page"
+        >
           Prev Page
         </button>
-        <span>Page {page} of {Math.ceil(totalArticles / articlesPerPage)}</span>
+
+        <span aria-live="polite">
+          Page {page} of {Math.ceil(totalArticles / articlesPerPage)}
+        </span>
+
         <button
           onClick={handleNextPage}
           disabled={page >= Math.ceil(totalArticles / articlesPerPage)}
+          aria-label="Next Page"
         >
           Next Page
         </button>
-      </div>
-    </div>
+      </nav>
+    </section>
   );
 }
 

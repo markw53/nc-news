@@ -1,6 +1,11 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { fetchArticleById, fetchCommentsByArticleId, voteOnArticle, deleteComment } from "../utils/api";
+import {
+  fetchArticleById,
+  fetchCommentsByArticleId,
+  voteOnArticle,
+  deleteComment
+} from "../utils/api";
 import ArticleHeader from "./ArticleHeader";
 import VoteSection from "./VoteSection";
 import CommentForm from "./CommentForm";
@@ -66,7 +71,9 @@ function ArticleDetail() {
 
     deleteComment(comment_id)
       .then(() => {
-        setComments((prevComments) => prevComments.filter((comment) => comment.comment_id !== comment_id));
+        setComments((prevComments) =>
+          prevComments.filter((comment) => comment.comment_id !== comment_id)
+        );
         setDeleteMessage("Comment deleted successfully.");
       })
       .catch((error) => {
@@ -92,20 +99,50 @@ function ArticleDetail() {
   if (loadingComments) return <p>Loading comments...</p>;
 
   return (
-    <div className="article-detail-container">
+    <div
+      className="article-detail-container"
+      role="main"
+      aria-labelledby="article-title"
+    >
       <ArticleHeader article={article} />
 
-      <ErrorMessage message={error} />
+      {error && (
+        <ErrorMessage
+          message={error}
+          aria-live="assertive"
+          aria-label="Error message"
+        />
+      )}
 
-      <VoteSection votes={votes} handleVote={handleVote} hasVoted={hasVoted} error={error} />
-      <CommentForm articleId={article_id} onCommentPosted={handleCommentPosted} />
-      {commentSuccess && <p className="success-message">{commentSuccess}</p>}
+      <VoteSection
+        votes={votes}
+        handleVote={handleVote}
+        hasVoted={hasVoted}
+        error={error}
+        aria-label="Vote section for the article"
+        aria-live="polite"
+      />
+
+      <CommentForm
+        articleId={article_id}
+        onCommentPosted={handleCommentPosted}
+        aria-label="Comment form"
+      />
+
+      {commentSuccess && (
+        <p className="success-message" aria-live="polite">
+          {commentSuccess}
+        </p>
+      )}
+
       <CommentsList
         comments={comments}
         loadingComments={loadingComments}
         deletingCommentId={deletingCommentId}
         handleDeleteComment={handleDeleteComment}
         deleteMessage={deleteMessage}
+        aria-label="Comments section"
+        aria-live="polite"
       />
     </div>
   );
