@@ -18,7 +18,7 @@ function ArticleHeader({ article }) {
         <img
           src={article.article_img_url}
           alt={`Image for article titled ${article.title}`}
-          className="article-image"
+          className="thumbnail"
         />
       </figure>
 

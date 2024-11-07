@@ -3,6 +3,54 @@
   text-align: center;
 }
 
+main {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  max-width: 800px;
+  margin: 0 auto
+}
+
+#cover_img {
+  width: 60%;
+  border-radius: 10px;
+}
+
+h1 {
+  background-color: rgba(73, 168, 168, 0.507);
+  color: rgb(58, 66, 95);
+  font-size: 450%;
+  margin: 0;
+}
+
+nav {
+  border: 1px solid #e7e7e7;
+  background-color: #f3f3f3;
+  padding: 8px 16px; 
+}
+
+.link {
+  padding: 8px 16px;
+  text-decoration: none;
+  }
+
+nav .link:hover {
+  background-color: rgb(156, 164, 209);
+}
+
+nav img {
+  height: 18px;
+}
+
+.topic-articles {
+  padding: 20px;
+}
+
+.vote {
+  width: 30px;
+}
+
 .articles-list-container {
   padding: 16px;
   max-width: 1200px;
@@ -10,31 +58,40 @@
 }
 
 .articles-grid {
-  display: grid;
-  gap: 30px;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  justify-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;  
 }
 
-.article-card {
+.articles-grid .article-card {
+  flex: 1 1 300px;  
+  max-width: 400px;  
   border: 1px solid #ccc;
   border-radius: 8px;
   padding: 16px;
-  width: 100%;
-  max-width: 300px;
-  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   background-color: #fff;
-  transition: transform 0.2s;
+}
+
+.articles-grid .article-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+.articles-grid .article-card h3 {
+  font-size: 1.2rem;
+  margin: 10px 0;
+}
+
+.articles-grid .article-card p {
+  font-size: 0.9rem;
+  color: #555;
 }
 
 .article-card:hover {
   transform: scale(1.03);
-}
-
-.article-card img {
-  width: 100%;
-  height: auto;
-  border-radius: 4px;
 }
 
 .article-card h2 {
@@ -55,6 +112,23 @@
 
 .article-detail {
   margin-bottom: 40px;
+}
+
+.review_card {
+  width: 150px;
+  max-height: 230px;
+  font-size: 12px;
+}
+
+#rev_card {
+  flex: 2;
+  min-width: 120px;
+  border: 1px solid #dddddd;
+  border-radius: 10px;
+  text-align: left;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 10px;
 }
 
 .comments-section {
@@ -127,9 +201,15 @@
 
 .error-message {
   color: red;
-  margin-top: 0.5rem;
-  font-weight: bold;
-  font-size: 0.9rem;
+  background-color: #f8d7da;
+  padding: 15px;
+  border-radius: 5px;
+  margin: 20px 0;
+  border: 1px solid #f5c6cb;
+}
+
+.error-message p {
+  margin: 0;
 }
 
 .error {
@@ -140,3 +220,110 @@
   color: green;
 }
 
+.review_card {
+  width: 150px;
+  max-height: 230px;
+  font-size: 12px;
+}
+
+ul {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  list-style-type: none;  
+}
+
+li {
+  max-width: 250px;
+  width: 170px;
+  height: 220px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: grey;
+  border-radius: 10px;
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin: 10px;
+  box-shadow: 0 10px 20px hsla(103, 7%, 40%, 0.555);
+  width: 150px;
+  height: 230px;
+  font-size: 12px;
+}
+
+.thumbnail {
+  max-height: 100px;
+  max-width: 150px;
+  border-radius: 10px;
+}
+
+.review_img {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.topics-list {
+  padding: 20px;
+}
+
+.topic-link {
+  display: block;
+  margin: 10px 0;
+  padding: 10px;
+  text-decoration: none;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.topic-link:hover {
+  background-color: #f0f0f0;
+}
+
+.topic-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.topic-slug {
+  font-weight: bold;
+}
+
+.topic-description {
+  color: #666;
+}
+@media (max-width: 768px) {
+  .articles-grid {
+      gap: 10px;
+  }
+  .articles-grid .article-card {
+      flex: 1 1 100%;
+  }
+}
+
+.sort-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.sort-controls label {
+  font-weight: bold;
+  margin-right: 8px;
+}
+
+.sort-controls select,
+.sort-controls button {
+  padding: 8px;
+  font-size: 1rem;
+  flex: 1 1 100px; 
+}
+
+@media (max-width: 480px) {
+  .sort-controls {
+    flex-direction: column; 
+  }
+}

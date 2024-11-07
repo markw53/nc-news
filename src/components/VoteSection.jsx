@@ -13,6 +13,7 @@ function VoteSection({ votes, handleVote, hasVoted, error }) {
       <button
         onClick={() => handleVote(1)}
         disabled={hasVoted}
+        className="vote"
         aria-label="Upvote"
         aria-pressed={hasVoted}
       >
@@ -22,6 +23,7 @@ function VoteSection({ votes, handleVote, hasVoted, error }) {
       <button
         onClick={() => handleVote(-1)}
         disabled={hasVoted}
+        className="vote"
         aria-label="Downvote"
         aria-pressed={hasVoted}
       >

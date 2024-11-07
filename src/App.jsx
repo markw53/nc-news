@@ -1,15 +1,26 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Route, Routes, BrowserRouter } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { fetchArticles, fetchTopics } from "./utils/api";
+import Header from "./components/Header";
+import Home from "./components/Home";
+import NavBar from "./components/Nav_Bar";
 import ArticlesList from "./components/ArticlesList";
 import ArticleDetail from "./components/ArticleDetail";
 import Topics from "./components/Topics";
 import TopicArticles from "./components/TopicArticles";
+import ErrorMessage from "./components/ErrorMessage";
+import SignIn from "./components/SignIn";
 import "./App.css";
 
 function App() {
   const [articles, setArticles] = useState([]);
   const [topics, setTopics] = useState([]);
+  const [user, setUser] = useState({
+    username: 'guest',
+    name: 'Guest',
+    avatar_url:
+      'https://sysnative.nyc3.cdn.digitaloceanspaces.com/data/avatars/h/33/33931.jpg?1563048380',
+  });
 
   useEffect(() => {
     fetchArticles()
@@ -32,35 +43,21 @@ function App() {
   }, []);
 
   return (
-    <Router>
+    <BrowserRouter>
       <div className="App">
-        <header>
-          <h1>Article List</h1>
-          <nav aria-label="Main navigation">
-            <ul>
-              <li>
-                <a href="/" aria-label="Go to homepage">
-                  Home
-                </a>
-              </li>
-              <li>
-                <a href="/topics" aria-label="Go to topics page">
-                  Topics
-                </a>
-              </li>
-            </ul>
-          </nav>
-        </header>
-        <main>
+        <Header />
+        <NavBar user={user} />          
           <Routes>
-            <Route path="/" element={<ArticlesList articles={articles} />} />
-            <Route path="/articles/:article_id" element={<ArticleDetail />} />
-            <Route path="/topics" element={<Topics topics={topics} />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/articles" element={<ArticlesList />} />
+            <Route path="/articles/:article_id" element={<ArticleDetail user={user} />} />
+            <Route path="/topics" element={<Topics />} />
             <Route path="topics/:topic" element={<TopicArticles />} />
+            <Route path="/users" element={<SignIn user={user} setUser={setUser} />}/>
+            <Route path="*" element={<ErrorMessage />} />
           </Routes>
-        </main>
       </div>
-    </Router>
+    </BrowserRouter>
   );
 }
 
