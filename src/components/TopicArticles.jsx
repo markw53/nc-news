@@ -3,7 +3,6 @@ import { useParams, useSearchParams } from "react-router-dom";
 import { fetchArticlesByTopic } from "../utils/api";
 import ArticleCard from "./ArticleCard";
 import ErrorMessage from "./ErrorMessage";
-import "./TopicArticles.css";
 
 function TopicArticles() {
   const { topic } = useParams();

@@ -1,11 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import {
-  fetchArticleById,
-  fetchCommentsByArticleId,
-  voteOnArticle,
-  deleteComment
-} from "../utils/api";
+import * as api from "../utils/api";
 import ArticleHeader from "./ArticleHeader";
 import VoteSection from "./VoteSection";
 import CommentForm from "./CommentForm";
@@ -26,7 +21,7 @@ function ArticleDetail() {
   const [deleteMessage, setDeleteMessage] = useState("");
 
   useEffect(() => {
-    fetchArticleById(article_id)
+    api.fetchArticleById(article_id)
       .then((fetchedArticle) => {
         setArticle(fetchedArticle);
         setVotes(fetchedArticle.votes);
@@ -36,7 +31,7 @@ function ArticleDetail() {
         setError("Failed to load article. Please try agin later.");
       });
 
-    fetchCommentsByArticleId(article_id)
+    api.fetchCommentsByArticleId(article_id)
       .then((fetchedComments) => {
         setComments(fetchedComments);
         setLoadingComments(false);
@@ -54,7 +49,7 @@ function ArticleDetail() {
     setVotes((prevVotes) => prevVotes + voteChange);
     setHasVoted(true);
 
-    voteOnArticle(article_id, voteChange)
+    api.voteOnArticle(article_id, voteChange)
       .then(() => setHasVoted(false))
       .catch((error) => {
         setVotes((prevVotes) => prevVotes - voteChange);
@@ -69,7 +64,7 @@ function ArticleDetail() {
     setDeletingCommentId(comment_id);
     setDeleteMessage("");
 
-    deleteComment(comment_id)
+    api.deleteComment(comment_id)
       .then(() => {
         setComments((prevComments) =>
           prevComments.filter((comment) => comment.comment_id !== comment_id)

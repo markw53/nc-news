@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { postComment } from "../utils/api";
 import ErrorMessage from "./ErrorMessage";
-import "../App.css";
 
 function CommentForm({ articleId, onCommentPosted }) {
   const [commentBody, setCommentBody] = useState("");
