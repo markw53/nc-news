@@ -1,15 +1,14 @@
-import React from 'react';
-import './ErrorMessage.css';
+import React from "react";
+import "./ErrorMessage.css";
 
 function ErrorMessage({ message }) {
-    if (!message) return null;
+  if (!message) return null;
 
-    return (
-        <div className='error-message'>
-            <p>{message}</p>
-        </div>
-    );
+  return (
+    <aside className="error-message" role="alert" aria-live="assertive">
+      <p>{message}</p>
+    </aside>
+  );
 }
 
 export default ErrorMessage;
-

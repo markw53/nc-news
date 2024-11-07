@@ -21,7 +21,7 @@ function TopicArticles() {
     fetchArticlesByTopic(topic, sortBy, order)
       .then((fetchedArticles) => {
         console.log("Fetched articles:", fetchedArticles);
-        setArticles(fetchedArticles.articles); 
+        setArticles(fetchedArticles.articles);
         setLoading(false);
       })
       .catch((error) => {
@@ -29,7 +29,7 @@ function TopicArticles() {
         setError("Failed to load articles. Please try again later.");
         setLoading(false);
       });
-  }, [topic, sortBy, order]); 
+  }, [topic, sortBy, order]);
 
   const handleSortChange = (e) => {
     setSearchParams({ sort_by: e.target.value, order });
@@ -41,26 +41,44 @@ function TopicArticles() {
   };
 
   if (loading) return <p>Loading articles...</p>;
-  
+
   return (
     <div className="topic-articles">
-      <h2>Articles on "{topic}"</h2>
+      <header aria-labelledby="topic-header">
+        <h2 id="topic-header">Articles on "{topic}"</h2>
+      </header>
 
       {error && <ErrorMessage message={error} />}
-      
-      <div className="sort-controls">
+
+      <section className="sort-controls" aria-labelledby="sort-controls-header">
+        <h3 id="sort-controls-header" className="visually-hidden">
+          Sort Controls
+        </h3>
         <label htmlFor="sort-by">Sort by:</label>
-        <select id="sort-by" value={sortBy} onChange={handleSortChange}>
+        <select
+          id="sort-by"
+          value={sortBy}
+          onChange={handleSortChange}
+          aria-label="Sort articles by"
+        >
           <option value="created_at">Date</option>
           <option value="comment_count">Comment Count</option>
           <option value="votes">Votes</option>
         </select>
-        <button onClick={handleOrderToggle}>
+        <button
+          onClick={handleOrderToggle}
+          aria-label={`Toggle order to ${
+            order === "asc" ? "descending" : "ascending"
+          }`}
+        >
           {order === "asc" ? "Ascending" : "Descending"}
         </button>
-      </div>
+      </section>
 
-      <div className="articles-grid">
+      <section className="articles-grid" aria-labelledby="articles-grid-header">
+        <h3 id="articles-grid-header" className="visually-hidden">
+          Articles List
+        </h3>
         {articles.length > 0 ? (
           articles.map((article) => (
             <ArticleCard key={article.article_id} article={article} />
@@ -68,7 +86,7 @@ function TopicArticles() {
         ) : (
           <p>No articles available for this topic.</p>
         )}
-      </div>
+      </section>
     </div>
   );
 }

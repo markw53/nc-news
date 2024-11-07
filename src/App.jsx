@@ -5,7 +5,7 @@ import ArticlesList from "./components/ArticlesList";
 import ArticleDetail from "./components/ArticleDetail";
 import Topics from "./components/Topics";
 import TopicArticles from "./components/TopicArticles";
-import './App.css';
+import "./App.css";
 
 function App() {
   const [articles, setArticles] = useState([]);
@@ -26,7 +26,7 @@ function App() {
       .then((fetchedTopics) => {
         setTopics(fetchedTopics);
       })
-      .catch ((error) => {
+      .catch((error) => {
         console.error("Error fetching topics:", error);
       });
   }, []);
@@ -36,16 +36,29 @@ function App() {
       <div className="App">
         <header>
           <h1>Article List</h1>
-          <nav>
-            <a href='/'>Home</a> | <a href='/topics'>Topics</a>
+          <nav aria-label="Main navigation">
+            <ul>
+              <li>
+                <a href="/" aria-label="Go to homepage">
+                  Home
+                </a>
+              </li>
+              <li>
+                <a href="/topics" aria-label="Go to topics page">
+                  Topics
+                </a>
+              </li>
+            </ul>
           </nav>
         </header>
-        <Routes>
-          <Route path="/" element={<ArticlesList articles={articles} />} />
-          <Route path="/articles/:article_id" element={<ArticleDetail />} />
-          <Route path="/topics" element={<Topics topics={topics} />} />
-          <Route path="topics/:topic" element={<TopicArticles />} />
-        </Routes>
+        <main>
+          <Routes>
+            <Route path="/" element={<ArticlesList articles={articles} />} />
+            <Route path="/articles/:article_id" element={<ArticleDetail />} />
+            <Route path="/topics" element={<Topics topics={topics} />} />
+            <Route path="topics/:topic" element={<TopicArticles />} />
+          </Routes>
+        </main>
       </div>
     </Router>
   );
