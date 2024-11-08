@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { postComment } from "../utils/api";
+import * as api from "../utils/api";
 import ErrorMessage from "./ErrorMessage";
 
-function CommentForm({ articleId, onCommentPosted }) {
+function CommentForm({ articleId, article, onCommentPosted }) {
   const [commentBody, setCommentBody] = useState("");
   const [error, setError] = useState("");
 
@@ -15,12 +15,14 @@ function CommentForm({ articleId, onCommentPosted }) {
     }
 
     try {
-      const newComment = await postComment(articleId, commentBody);
+      const articleAuthor = article.author;
+      const newComment = await api.postComment(articleId, commentBody, articleAuthor);
       onCommentPosted(newComment);
       setCommentBody("");
       setError("");
     } catch (error) {
-      setError("Failed to post comment. Please try again.");
+      console.error("Failed to post comment.", error);
+      setError(error.response?.data?.message || "Failed to post comment. Please try again");
     }
   };
 
@@ -61,7 +63,7 @@ function CommentForm({ articleId, onCommentPosted }) {
         </button>
       </form>
 
-      <ErrorMessage message={error} />
+      {error && <ErrorMessage message={error} />}
     </section>
   );
 }

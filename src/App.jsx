@@ -15,11 +15,16 @@ import "./App.css";
 function App() {
   const [articles, setArticles] = useState([]);
   const [topics, setTopics] = useState([]);
-  const [user, setUser] = useState({
-    username: 'guest',
-    name: 'Guest',
-    avatar_url:
-      'https://sysnative.nyc3.cdn.digitaloceanspaces.com/data/avatars/h/33/33931.jpg?1563048380',
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem("user");
+    return savedUser
+      ? JSON.parse(savedUser)
+      : {
+          username: "guest",
+          name: "Guest",
+          avatar_url:
+            "https://sysnative.nyc3.cdn.digitaloceanspaces.com/data/avatars/h/33/33931.jpg?1563048380"
+        };
   });
 
   useEffect(() => {
@@ -46,16 +51,22 @@ function App() {
     <BrowserRouter>
       <div className="App">
         <Header />
-        <NavBar user={user} />          
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/articles" element={<ArticlesList />} />
-            <Route path="/articles/:article_id" element={<ArticleDetail user={user} />} />
-            <Route path="/topics" element={<Topics />} />
-            <Route path="topics/:topic" element={<TopicArticles />} />
-            <Route path="/users" element={<SignIn user={user} setUser={setUser} />}/>
-            <Route path="*" element={<ErrorMessage />} />
-          </Routes>
+        <NavBar user={user} />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/articles" element={<ArticlesList />} />
+          <Route
+            path="/articles/:article_id"
+            element={<ArticleDetail user={user} />}
+          />
+          <Route path="/topics" element={<Topics />} />
+          <Route path="topics/:topic" element={<TopicArticles />} />
+          <Route
+            path="/users"
+            element={<SignIn user={user} setUser={setUser} />}
+          />
+          <Route path="*" element={<ErrorMessage />} />
+        </Routes>
       </div>
     </BrowserRouter>
   );

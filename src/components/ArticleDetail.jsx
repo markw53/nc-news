@@ -11,6 +11,7 @@ function ArticleDetail() {
   const { article_id } = useParams();
   const [article, setArticle] = useState(null);
   const [comments, setComments] = useState([]);
+  const [loadingArticle, setLoadingArticle] = useState(true);
   const [loadingComments, setLoadingComments] = useState(true);
   const [votes, setVotes] = useState(0);
   const [hasVoted, setHasVoted] = useState(false);
@@ -25,10 +26,12 @@ function ArticleDetail() {
       .then((fetchedArticle) => {
         setArticle(fetchedArticle);
         setVotes(fetchedArticle.votes);
+        setLoadingArticle(false);
       })
       .catch((error) => {
         console.error("Error fetching article:", error);
         setError("Failed to load article. Please try agin later.");
+        setLoadingArticle(false);
       });
 
     api.fetchCommentsByArticleId(article_id)
@@ -41,13 +44,20 @@ function ArticleDetail() {
         setError("Failed to load comments. Please try again later.");
         setLoadingComments(false);
       });
+
+      const storedVoteState = localStorage.getItem(`hasVoted_${article_id}`);
+      if (storedVoteState) {
+        setHasVoted(true)
+      }
   }, [article_id]);
 
   const handleVote = (voteChange) => {
-    if (hasVoted) return;
+    if (hasVoted || votes + voteChange < 0) return;
 
     setVotes((prevVotes) => prevVotes + voteChange);
     setHasVoted(true);
+
+    localStorage.setItem(`hasVoted_${article_id}`, true);
 
     api.voteOnArticle(article_id, voteChange)
       .then(() => setHasVoted(false))
@@ -90,8 +100,8 @@ function ArticleDetail() {
     setSubmittedComments((prev) => new Set(prev).add(newComment.body.trim()));
   };
 
-  if (!article) return <p>Loading...</p>;
-  if (loadingComments) return <p>Loading comments...</p>;
+  if (loadingArticle) return <p>Loading article...</p>;
+  if (error) return <ErrorMessage message={error} aria-live="assertive" />;
 
   return (
     <div
@@ -100,14 +110,6 @@ function ArticleDetail() {
       aria-labelledby="article-title"
     >
       <ArticleHeader article={article} />
-
-      {error && (
-        <ErrorMessage
-          message={error}
-          aria-live="assertive"
-          aria-label="Error message"
-        />
-      )}
 
       <VoteSection
         votes={votes}
@@ -120,6 +122,7 @@ function ArticleDetail() {
 
       <CommentForm
         articleId={article_id}
+        article={article}
         onCommentPosted={handleCommentPosted}
         aria-label="Comment form"
       />

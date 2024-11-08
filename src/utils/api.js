@@ -28,13 +28,14 @@ export const fetchCommentsByArticleId = article_id => {
 };
 
 export const voteOnArticle = (article_id, voteChange) => {
-  return api.patch(`/articles/${article_id}`, { inc_votes: voteChange });
+  return api.patch(`/articles/${article_id}`, { inc_votes: author });
 };
 
-export const postComment = (article_id, commentBody) => {
+export const postComment = (article_id, commentBody, articleAuthor) => {
   return api.post(`/articles/${article_id}/comments`, {
-    body: commentBody
-  });
+    body: commentBody, 
+    author: articleAuthor
+  }).then((response) => response.comment);
 };
 
 export const deleteComment = comment_id => {
@@ -72,3 +73,5 @@ export const fetchUsers = () => {
     return res.data.users;
   });
 };
+
+export default api;

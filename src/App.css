@@ -157,7 +157,7 @@ nav img {
   flex-direction: column;
   align-items: center; 
   margin-top: 1rem;
-  width: 100%;
+  width: 80%;
   max-width: 600px;
   margin: 0 auto;
 }
@@ -305,21 +305,26 @@ li {
 
 .sort-controls {
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
   gap: 8px;
-  margin-bottom: 16px;
+  max-width: 250px; /* Restrict width */
+  margin: 0 auto;
 }
 
 .sort-controls label {
   font-weight: bold;
-  margin-right: 8px;
 }
 
-.sort-controls select,
+.sort-controls select {
+  width: 100px; /* Narrower width */
+  padding: 4px;
+  font-size: 0.9rem;
+}
+
 .sort-controls button {
-  padding: 8px;
-  font-size: 1rem;
-  flex: 1 1 100px; 
+  padding: 4px 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
 }
 
 @media (max-width: 480px) {
