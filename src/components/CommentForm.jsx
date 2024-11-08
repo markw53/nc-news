@@ -16,13 +16,20 @@ function CommentForm({ articleId, article, onCommentPosted }) {
 
     try {
       const articleAuthor = article.author;
-      const newComment = await api.postComment(articleId, commentBody, articleAuthor);
+      const newComment = await api.postComment(
+        articleId,
+        commentBody,
+        articleAuthor
+      );
       onCommentPosted(newComment);
       setCommentBody("");
       setError("");
     } catch (error) {
       console.error("Failed to post comment.", error);
-      setError(error.response?.data?.message || "Failed to post comment. Please try again");
+      setError(
+        error.response?.data?.message ||
+          "Failed to post comment. Please try again"
+      );
     }
   };
 

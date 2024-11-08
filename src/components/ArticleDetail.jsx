@@ -22,7 +22,8 @@ function ArticleDetail() {
   const [deleteMessage, setDeleteMessage] = useState("");
 
   useEffect(() => {
-    api.fetchArticleById(article_id)
+    api
+      .fetchArticleById(article_id)
       .then((fetchedArticle) => {
         setArticle(fetchedArticle);
         setVotes(fetchedArticle.votes);
@@ -34,7 +35,8 @@ function ArticleDetail() {
         setLoadingArticle(false);
       });
 
-    api.fetchCommentsByArticleId(article_id)
+    api
+      .fetchCommentsByArticleId(article_id)
       .then((fetchedComments) => {
         setComments(fetchedComments);
         setLoadingComments(false);
@@ -45,10 +47,10 @@ function ArticleDetail() {
         setLoadingComments(false);
       });
 
-      const storedVoteState = localStorage.getItem(`hasVoted_${article_id}`);
-      if (storedVoteState) {
-        setHasVoted(true)
-      }
+    const storedVoteState = localStorage.getItem(`hasVoted_${article_id}`);
+    if (storedVoteState) {
+      setHasVoted(true);
+    }
   }, [article_id]);
 
   const handleVote = (voteChange) => {
@@ -59,7 +61,8 @@ function ArticleDetail() {
 
     localStorage.setItem(`hasVoted_${article_id}`, true);
 
-    api.voteOnArticle(article_id, voteChange)
+    api
+      .voteOnArticle(article_id, voteChange)
       .then(() => setHasVoted(false))
       .catch((error) => {
         setVotes((prevVotes) => prevVotes - voteChange);
@@ -74,7 +77,8 @@ function ArticleDetail() {
     setDeletingCommentId(comment_id);
     setDeleteMessage("");
 
-    api.deleteComment(comment_id)
+    api
+      .deleteComment(comment_id)
       .then(() => {
         setComments((prevComments) =>
           prevComments.filter((comment) => comment.comment_id !== comment_id)

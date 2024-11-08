@@ -32,10 +32,12 @@ export const voteOnArticle = (article_id, voteChange) => {
 };
 
 export const postComment = (article_id, commentBody, articleAuthor) => {
-  return api.post(`/articles/${article_id}/comments`, {
-    body: commentBody, 
-    author: articleAuthor
-  }).then((response) => response.comment);
+  return api
+    .post(`/articles/${article_id}/comments`, {
+      body: commentBody,
+      author: articleAuthor
+    })
+    .then(response => response.comment);
 };
 
 export const deleteComment = comment_id => {

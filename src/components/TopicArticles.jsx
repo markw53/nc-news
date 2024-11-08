@@ -41,8 +41,7 @@ function TopicArticles() {
       {error && <ErrorMessage message={error} />}
 
       <section className="articles-grid" aria-labelledby="articles-grid-header">
-        <h3 id="articles-grid-header" className="visually-hidden">       
-        </h3>
+        <h3 id="articles-grid-header" className="visually-hidden"></h3>
         {articles.length > 0 ? (
           articles.map((article) => (
             <ArticleCard key={article.article_id} article={article} />
