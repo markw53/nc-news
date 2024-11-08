@@ -17,7 +17,7 @@ function VoteSection({ votes, handleVote, hasVoted, error }) {
         aria-label="Upvote"
         aria-pressed={hasVoted}
       >
-        Upvote
+        👍
       </button>
 
       <button
@@ -27,7 +27,7 @@ function VoteSection({ votes, handleVote, hasVoted, error }) {
         aria-label="Downvote"
         aria-pressed={hasVoted}
       >
-        Downvote
+        👎
       </button>
 
       {error && (

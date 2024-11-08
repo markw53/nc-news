@@ -15,6 +15,8 @@ main {
 #cover_img {
   width: 60%;
   border-radius: 10px;
+  border: 4px; color: #ccc;
+  padding: 5px;
 }
 
 h1 {
@@ -331,4 +333,51 @@ li {
   .sort-controls {
     flex-direction: column; 
   }
+}
+
+.vote-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.vote-count {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 8px; /* Space between count and buttons */
+}
+
+.vote-buttons {
+  display: flex;
+  gap: 15px; /* Space between buttons */
+}
+
+.vote {
+  width: 60px;
+  height: 40px;
+  font-size: 1.2rem;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.vote:hover {
+  background-color: #45a049;
+}
+
+.vote:disabled {
+  background-color: #ddd;
+  color: #999;
+  cursor: not-allowed;
+}
+
+.error {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 5px;
 }

@@ -7,7 +7,14 @@ const Home = () => {
           articles on the topics you want to read about.
         </p>
 
-        <img id="cover_img" src="https://images.pexels.com/photos/373543/pexels-photo-373543.jpeg?w=700&h=700"></img>
+        <img id="cover_img" src="https://images.pexels.com/photos/373543/pexels-photo-373543.jpeg?w=700&h=700"
+        style={{
+          width: '60%',
+          borderRadius: '10px',
+          border: '4px solid #ccc',
+          padding: '5px',
+        }}
+        />
 
         <p>
           On our site you'll find articles for a popular range of topics which
