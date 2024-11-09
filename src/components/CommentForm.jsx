@@ -5,21 +5,22 @@ import ErrorMessage from "./ErrorMessage";
 function CommentForm({ articleId, article, onCommentPosted }) {
   const [commentBody, setCommentBody] = useState("");
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!commentBody.trim()) {
       setError("Comment cannot be empty.");
       return;
     }
 
+    setIsSubmitting(true);
+
     try {
-      const articleAuthor = article.author;
       const newComment = await api.postComment(
         articleId,
         commentBody,
-        articleAuthor
+        article.author
       );
       onCommentPosted(newComment);
       setCommentBody("");
@@ -30,6 +31,8 @@ function CommentForm({ articleId, article, onCommentPosted }) {
         error.response?.data?.message ||
           "Failed to post comment. Please try again"
       );
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -59,14 +62,16 @@ function CommentForm({ articleId, article, onCommentPosted }) {
           required
           className="comment-textarea"
           aria-required="true"
+          disabled={isSubmitting}
         />
 
         <button
           type="submit"
           className="submit-button"
           aria-label="Post Comment"
+          disabled={isSubmitting || !commentBody.trim()}
         >
-          Post Comment
+          {isSubmitting ? "Posting.." : "Post Comment"}
         </button>
       </form>
 

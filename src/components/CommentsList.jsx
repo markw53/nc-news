@@ -29,7 +29,7 @@ function CommentsList({
                   </p>
                 </header>
                 <p>{comment.body}</p>
-                <p>Votes: {comment.votes}</p>
+                <p>👍 {comment.votes}</p>
                 <button
                   onClick={() => handleDeleteComment(comment.comment_id)}
                   disabled={deletingCommentId === comment.comment_id}

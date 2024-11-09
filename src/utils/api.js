@@ -31,13 +31,17 @@ export const voteOnArticle = (article_id, voteChange) => {
   return api.patch(`/articles/${article_id}`, { inc_votes: author });
 };
 
-export const postComment = (article_id, commentBody, articleAuthor) => {
-  return api
-    .post(`/articles/${article_id}/comments`, {
-      body: commentBody,
-      author: articleAuthor
-    })
-    .then(response => response.comment);
+export const postComment = async (article_id, commentBody, author) => {
+  try {
+    const response = await api.post(`/articles/${article_id}/comments`, {
+      username: author,
+      body: commentBody
+    });
+    return response.data.comment;
+  } catch (error) {
+    console.error("Error in postComment:", error);
+    throw error;
+  }
 };
 
 export const deleteComment = comment_id => {
