@@ -21,6 +21,15 @@ function ArticleDetail() {
   const [deletingCommentId, setDeletingCommentId] = useState(null);
   const [deleteMessage, setDeleteMessage] = useState("");
 
+  // Helper function to calculate reading time
+  const calculateReadingTime = (content) => {
+    const wordCount = content.split(" ").length;
+    const readingTimeInSeconds = wordCount / 3; // 3 words per second
+    const minutes = Math.floor(readingTimeInSeconds / 60);
+    const seconds = Math.round(readingTimeInSeconds % 60);
+    return `${minutes} min ${seconds} sec`;
+  };
+
   useEffect(() => {
     api
       .fetchArticleById(article_id)
@@ -31,7 +40,7 @@ function ArticleDetail() {
       })
       .catch((error) => {
         console.error("Error fetching article:", error);
-        setError("Failed to load article. Please try agin later.");
+        setError("Failed to load article. Please try again later.");
         setLoadingArticle(false);
       });
 
@@ -107,6 +116,8 @@ function ArticleDetail() {
   if (loadingArticle) return <p>Loading article...</p>;
   if (error) return <ErrorMessage message={error} aria-live="assertive" />;
 
+  const readingTime = article ? calculateReadingTime(article.body) : null;
+
   return (
     <div
       className="article-detail-container"
@@ -114,6 +125,13 @@ function ArticleDetail() {
       aria-labelledby="article-title"
     >
       <ArticleHeader article={article} />
+
+      {/* Displaying reading time */}
+      {readingTime && (
+        <p className="reading-time" aria-live="polite">
+          Estimated reading time: {readingTime}
+        </p>
+      )}
 
       <VoteSection
         votes={votes}
