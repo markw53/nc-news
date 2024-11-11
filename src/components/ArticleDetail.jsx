@@ -21,10 +21,9 @@ function ArticleDetail() {
   const [deletingCommentId, setDeletingCommentId] = useState(null);
   const [deleteMessage, setDeleteMessage] = useState("");
 
-  // Helper function to calculate reading time
   const calculateReadingTime = (content) => {
     const wordCount = content.split(" ").length;
-    const readingTimeInSeconds = wordCount / 3; // 3 words per second
+    const readingTimeInSeconds = wordCount / 3; 
     const minutes = Math.floor(readingTimeInSeconds / 60);
     const seconds = Math.round(readingTimeInSeconds % 60);
     return `${minutes} min ${seconds} sec`;
@@ -126,7 +125,6 @@ function ArticleDetail() {
     >
       <ArticleHeader article={article} />
 
-      {/* Displaying reading time */}
       {readingTime && (
         <p className="reading-time" aria-live="polite">
           Estimated reading time: {readingTime}
