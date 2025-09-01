@@ -1,11 +1,13 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import * as api from "../utils/api";
-import ArticleHeader from "./ArticleHeader";
-import VoteSection from "./VoteSection";
-import CommentForm from "./CommentForm";
-import CommentsList from "./CommentsList";
-import ErrorMessage from "./ErrorMessage";
+import {
+  ArticleHeader,
+  VoteSection,
+  CommentForm,
+  CommentsList,
+  ErrorMessage,   
+} from "../components";
 
 function ArticleDetail({ user }) {
   const { article_id } = useParams();

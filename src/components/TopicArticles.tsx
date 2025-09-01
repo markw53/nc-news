@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { fetchArticlesByTopic } from "../utils/api";
-import ArticleCard from "./ArticleCard";
-import ErrorMessage from "./ErrorMessage";
+import {
+  ArticleCard,
+  ErrorMessage,
+} from ".";
 
 function TopicArticles() {
   const { topic } = useParams();
