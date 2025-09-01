@@ -8,7 +8,7 @@ function TopicArticles() {
   const { topic } = useParams();
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [error, setError] = useState("");
 
   const sortBy = searchParams.get("sort_by") || "created_at";
@@ -17,40 +17,29 @@ function TopicArticles() {
   useEffect(() => {
     setLoading(true);
     setError("");
+
     fetchArticlesByTopic(topic, sortBy, order)
-      .then((fetchedArticles) => {
-        console.log("Fetched articles:", fetchedArticles);
-        setArticles(fetchedArticles.articles);
-        setLoading(false);
+      .then(({ articles = [] }) => {
+        setArticles(articles);
       })
-      .catch((error) => {
-        console.error("Error fetching articles by topic:", error);
+      .catch((err) => {
+        console.error("Error fetching articles by topic:", err);
         setError("Failed to load articles. Please try again later.");
-        setLoading(false);
-      });
+      })
+      .finally(() => setLoading(false));
   }, [topic, sortBy, order]);
 
   if (loading) return <p>Loading articles...</p>;
 
   return (
-    <div className="topic-articles">
-      <header aria-labelledby="topic-header">
-        <h2 id="topic-header">Articles on "{topic}"</h2>
-      </header>
-
-      {error && <ErrorMessage message={error} />}
-
-      <section className="articles-grid" aria-labelledby="articles-grid-header">
-        <h3 id="articles-grid-header" className="visually-hidden"></h3>
-        {articles.length > 0 ? (
-          articles.map((article) => (
-            <ArticleCard key={article.article_id} article={article} />
-          ))
-        ) : (
-          <p>No articles available for this topic.</p>
-        )}
-      </section>
+    <div className="p-5">
+  <h2 className="text-xl font-bold mb-3">Articles on “{topic}”</h2>
+  {articles.length ? (
+    <div className="flex flex-wrap justify-center gap-5">
+      {articles.map((a) => <ArticleCard key={a.article_id} article={a}/>)}
     </div>
+  ) : <p>No articles available for this topic.</p>}
+</div>
   );
 }
 

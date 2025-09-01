@@ -1,62 +1,30 @@
-function CommentsList({
-  comments,
-  loadingComments,
-  deletingCommentId,
-  handleDeleteComment,
-  deleteMessage
-}) {
+function CommentsList({ comments, loadingComments, deletingCommentId, handleDeleteComment }) {
   return (
-    <section className="comments-section" aria-labelledby="comments-title">
-      <h3 id="comments-title">Comments</h3>
-
-      {loadingComments ? (
-        <p aria-live="polite">Loading comments...</p>
-      ) : (
-        <div className="comments-grid" aria-live="polite">
-          {comments.length > 0 ? (
-            comments.map((comment) => (
-              <article
-                key={comment.comment_id}
-                className="comment-card"
-                aria-labelledby={`comment-${comment.comment_id}-author`}
+    <section className="mt-5 pt-2 border-t border-gray-300">
+      <h3 className="text-xl font-semibold mb-3">Comments</h3>
+      {loadingComments ? <p>Loading comments...</p> : (
+        <div className="grid gap-5 mt-5 grid-cols-[repeat(auto-fill,minmax(250px,1fr))]">
+          {comments.length > 0 ? comments.map((c) => (
+            <article key={c.comment_id} className="border border-gray-300 p-3 rounded bg-gray-50 shadow-sm">
+              <header className="mb-2">
+                <strong>{c.author || "Unknown"}</strong>
+                <time className="block text-xs text-gray-500">
+                  {new Date(c.created_at?.seconds ? c.created_at.seconds * 1000 : c.created_at).toLocaleString()}
+                </time>
+              </header>
+              <p>{c.body}</p>
+              <p className="text-sm">👍 {c.votes ?? 0}</p>
+              <button
+                disabled={deletingCommentId === c.comment_id}
+                onClick={() => handleDeleteComment(c.comment_id)}
+                className="mt-2 px-3 py-1 bg-red-500 text-white rounded disabled:opacity-50"
               >
-                <header>
-                  <p id={`comment-${comment.comment_id}-author`}>
-                    <strong>{comment.author}</strong>
-                    <time dateTime={new Date(comment.created_at).toISOString()}>
-                      {new Date(comment.created_at).toLocaleString()}
-                    </time>
-                  </p>
-                </header>
-                <p>{comment.body}</p>
-                <p>👍 {comment.votes}</p>
-                <button
-                  onClick={() => handleDeleteComment(comment.comment_id)}
-                  disabled={deletingCommentId === comment.comment_id}
-                  aria-label={
-                    deletingCommentId === comment.comment_id
-                      ? "Deleting comment"
-                      : "Delete this comment"
-                  }
-                >
-                  {deletingCommentId === comment.comment_id
-                    ? "Deleting..."
-                    : "Delete"}
-                </button>
-              </article>
-            ))
-          ) : (
-            <p>No comments yet.</p>
-          )}
-          {deleteMessage && (
-            <p className="delete-message" aria-live="polite">
-              {deleteMessage}
-            </p>
-          )}
+                {deletingCommentId === c.comment_id ? "Deleting..." : "Delete"}
+              </button>
+            </article>
+          )) : <p>No comments yet.</p>}
         </div>
       )}
     </section>
   );
 }
-
-export default CommentsList;

@@ -29,8 +29,8 @@ function App() {
 
   useEffect(() => {
     fetchArticles()
-      .then((fetchedArticles) => {
-        setArticles(fetchedArticles);
+      .then(({ articles }) => {
+        setArticles(articles || []);
       })
       .catch((error) => {
         console.error("Error fetching articles:", error);
@@ -40,7 +40,7 @@ function App() {
   useEffect(() => {
     fetchTopics()
       .then((fetchedTopics) => {
-        setTopics(fetchedTopics);
+        setTopics(fetchedTopics || []);
       })
       .catch((error) => {
         console.error("Error fetching topics:", error);
@@ -60,12 +60,13 @@ function App() {
             element={<ArticleDetail user={user} />}
           />
           <Route path="/topics" element={<Topics />} />
-          <Route path="topics/:topic" element={<TopicArticles />} />
+          <Route path="/topics/:topic" element={<TopicArticles />} />
           <Route
             path="/users"
             element={<SignIn user={user} setUser={setUser} />}
           />
-          <Route path="*" element={<ErrorMessage />} />
+          {/* ✅ Provide explicit message prop for catch-all error route */}
+          <Route path="*" element={<ErrorMessage message="Page not found" />} />
         </Routes>
       </div>
     </BrowserRouter>

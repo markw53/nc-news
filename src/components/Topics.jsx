@@ -1,54 +1,23 @@
-import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { fetchTopics } from "../utils/api";
 
-function Topics() {
-  const [topics, setTopics] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    fetchTopics()
-      .then((data) => {
-        console.log("Data from API:", data);
-        setTopics(data.topics || []);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching topics:", error);
-        setError("Failed to load topics, Please try again later.");
-        setLoading(false);
-      });
-  }, []);
-
-  if (loading) return <p>Loading topics...</p>;
-  if (error) return <p className="error-message">{error}</p>;
-
+function Topics({ topics }) {
   return (
-    <div className="topics-list" aria-labelledby="topics-header">
-      <header>
-        <h2 id="topics-header">Select a Topic</h2>
-      </header>
-      <section aria-labelledby="topics-list" className="topics-section">
-        <h3 id="topics-list" className="visually-hidden">
-          Available Topics
-        </h3>
-        {topics.length > 0 ? (
-          topics.map((topic) => (
-            <Link
-              key={topic.slug}
-              to={`/topics/${topic.slug}`}
-              className="topic-link"
-              aria-label={`Topic: ${topic.slug}`}
-            >
-              <p>{topic.slug}</p>
-              <span>{topic.description}</span>
-            </Link>
-          ))
-        ) : (
-          <p>No topics available.</p>
-        )}
-      </section>
+    <div className="p-5">
+      <h2 className="text-2xl font-bold mb-3 text-nc-secondary">Select a Topic</h2>
+      {topics.length ? (
+        topics.map((t) => (
+          <Link
+            key={t.slug}
+            to={`/topics/${t.slug}`}
+            className="block m-2 p-3 border border-gray-300 rounded hover:bg-nc-light hover:border-nc-accent transition"
+          >
+            <p className="font-bold text-nc-primary">{t.slug}</p>
+            <span className="text-gray-600">{t.description}</span>
+          </Link>
+        ))
+      ) : (
+        <p>No topics available.</p>
+      )}
     </div>
   );
 }

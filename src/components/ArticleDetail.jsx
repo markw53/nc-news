@@ -7,7 +7,7 @@ import CommentForm from "./CommentForm";
 import CommentsList from "./CommentsList";
 import ErrorMessage from "./ErrorMessage";
 
-function ArticleDetail() {
+function ArticleDetail({ user }) {
   const { article_id } = useParams();
   const [article, setArticle] = useState(null);
   const [comments, setComments] = useState([]);
@@ -16,11 +16,11 @@ function ArticleDetail() {
   const [votes, setVotes] = useState(0);
   const [hasVoted, setHasVoted] = useState(false);
   const [error, setError] = useState(null);
-  const [submittedComments, setSubmittedComments] = useState(new Set());
   const [commentSuccess, setCommentSuccess] = useState("");
   const [deletingCommentId, setDeletingCommentId] = useState(null);
   const [deleteMessage, setDeleteMessage] = useState("");
 
+  // Estimated reading time
   const calculateReadingTime = (content = "") => {
     if (!content) return null;
     const wordCount = content.split(/\s+/).length;
@@ -30,144 +30,96 @@ function ArticleDetail() {
     return `${minutes} min ${seconds} sec`;
   };
 
+  // Fetch article + comments
   useEffect(() => {
-    // Fetch article
+    setLoadingArticle(true);
+    setLoadingComments(true);
+
     api
       .fetchArticleById(article_id)
-      .then((fetchedArticle) => {
-        if (!fetchedArticle) {
+      .then((fetched) => {
+        if (!fetched) {
           setError("Article not found.");
-          setLoadingArticle(false);
           return;
         }
         setArticle({
-          ...fetchedArticle,
-          votes: fetchedArticle.votes ?? 0,
-          comment_count: fetchedArticle.comment_count ?? 0,
+          ...fetched,
+          votes: fetched.votes ?? 0,
+          comment_count: fetched.comment_count ?? 0,
         });
-        setVotes(fetchedArticle.votes ?? 0);
+        setVotes(fetched.votes ?? 0);
       })
-      .catch((err) => {
-        console.error("Error fetching article:", err);
-        setError("Failed to load article. Please try again later.");
-      })
+      .catch(() => setError("Failed to load article."))
       .finally(() => setLoadingArticle(false));
 
-    // Fetch comments
     api
       .fetchCommentsByArticleId(article_id)
-      .then((fetchedComments = []) => {
-        setComments(fetchedComments || []);
-      })
-      .catch((err) => {
-        console.error("Error fetching comments:", err);
-        setError("Failed to load comments. Please try again later.");
-      })
+      .then((fetched) => setComments(fetched || []))
+      .catch(() => setError("Failed to load comments."))
       .finally(() => setLoadingComments(false));
 
-    // Has user voted?
-    const storedVoteState = localStorage.getItem(`hasVoted_${article_id}`);
-    if (storedVoteState) setHasVoted(true);
+    if (localStorage.getItem(`hasVoted_${article_id}`)) setHasVoted(true);
   }, [article_id]);
 
-  const handleVote = (voteChange) => {
-    if (hasVoted || votes + voteChange < 0) return;
-
-    setVotes((prev) => prev + voteChange);
+  // Voting
+  const handleVote = (delta) => {
+    if (hasVoted || votes + delta < 0) return;
+    setVotes((v) => v + delta);
     setHasVoted(true);
-
     localStorage.setItem(`hasVoted_${article_id}`, true);
 
-    api
-      .voteOnArticle(article_id, voteChange)
-      .then((updatedArticle) => {
-        setVotes(updatedArticle?.votes ?? (votes + voteChange));
-        setHasVoted(false);
-      })
-      .catch((err) => {
-        console.error("Error casting vote:", err);
-        setVotes((prev) => prev - voteChange);
-        setHasVoted(false);
-        setError("Failed to update vote. Please try again.");
-      });
+    api.voteOnArticle(article_id, delta).catch(() => {
+      setVotes((v) => v - delta);
+      setHasVoted(false);
+      setError("Failed to update vote. Please try again.");
+    }).finally(() => setHasVoted(false));
+  };
+
+  // Comment handlers
+  const handleCommentPosted = (newComment) => {
+    setComments((prev) => [newComment, ...prev]);
+    setCommentSuccess("Comment posted successfully!");
   };
 
   const handleDeleteComment = (comment_id) => {
-    if (deletingCommentId) return; // prevent duplicate calls
-
     setDeletingCommentId(comment_id);
     setDeleteMessage("");
 
-    api
-      .deleteComment(comment_id)
+    api.deleteComment(comment_id)
       .then(() => {
-        setComments((prev) =>
-          prev.filter((c) => c.comment_id !== comment_id)
-        );
+        setComments((prev) => prev.filter((c) => c.comment_id !== comment_id));
         setDeleteMessage("Comment deleted successfully.");
       })
-      .catch((err) => {
-        console.error("Error deleting comment:", err);
-        setDeleteMessage("Failed to delete comment. Please try again.");
-        setError("Failed to delete comment. Please try again.");
+      .catch(() => {
+        setDeleteMessage("Failed to delete comment.");
+        setError("Failed to delete comment.");
       })
       .finally(() => setDeletingCommentId(null));
   };
 
-  const handleCommentPosted = (newComment) => {
-    const trimmedBody = newComment?.body?.trim();
-    if (!trimmedBody) return;
-
-    if (submittedComments.has(trimmedBody)) {
-      setError("You have already posted this comment.");
-      return;
-    }
-
-    setComments((prev) => [newComment, ...prev]);
-    setCommentSuccess("Comment posted successfully!");
-    setSubmittedComments((prev) => new Set(prev).add(trimmedBody));
-  };
-
+  // Render
   if (loadingArticle) return <p>Loading article...</p>;
-  if (error) return <ErrorMessage message={error} aria-live="assertive" />;
+  if (error) return <ErrorMessage message={error} />;
   if (!article) return <p>Article not found.</p>;
 
   const readingTime = calculateReadingTime(article.body);
 
   return (
-    <div
-      className="article-detail-container"
-      role="main"
-      aria-labelledby={`article-title-${article.article_id}`}
-    >
+    <div className="max-w-[800px] mx-auto p-5">
       <ArticleHeader article={article} />
 
       {readingTime && (
-        <p className="reading-time" aria-live="polite">
-          Estimated reading time: {readingTime}
+        <p className="text-sm text-gray-500 mt-2 italic">
+          ⏱ Estimated reading time: {readingTime}
         </p>
       )}
 
-      <VoteSection
-        votes={votes}
-        handleVote={handleVote}
-        hasVoted={hasVoted}
-        error={error}
-        aria-label="Vote section for the article"
-        aria-live="polite"
-      />
+      <VoteSection votes={votes} handleVote={handleVote} hasVoted={hasVoted} error={error} />
 
-      <CommentForm
-        articleId={article_id}
-        article={article}
-        onCommentPosted={handleCommentPosted}
-        aria-label="Comment form"
-      />
+      <CommentForm articleId={article_id} currentUser={user} onCommentPosted={handleCommentPosted} />
 
       {commentSuccess && (
-        <p className="success-message" aria-live="polite">
-          {commentSuccess}
-        </p>
+        <p className="text-nc-success mt-2">{commentSuccess}</p>
       )}
 
       <CommentsList
@@ -176,8 +128,6 @@ function ArticleDetail() {
         deletingCommentId={deletingCommentId}
         handleDeleteComment={handleDeleteComment}
         deleteMessage={deleteMessage}
-        aria-label="Comments section"
-        aria-live="polite"
       />
     </div>
   );
