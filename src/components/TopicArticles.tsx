@@ -6,9 +6,15 @@ import {
   ErrorMessage,
 } from ".";
 
+type Article = {
+  article_id: number;
+  // add other properties as needed
+  [key: string]: any;
+};
+
 function TopicArticles() {
   const { topic } = useParams();
-  const [articles, setArticles] = useState([]);
+  const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchParams] = useSearchParams();
   const [error, setError] = useState("");

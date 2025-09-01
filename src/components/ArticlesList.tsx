@@ -2,8 +2,14 @@ import { useEffect, useState } from "react";
 import { fetchArticles } from "../utils/api";
 import ArticleCard from "./ArticleCard";
 
+type Article = {
+  article_id: number;
+  // add other properties as needed, e.g. title, author, etc.
+  [key: string]: any;
+};
+
 function ArticlesList() {
-  const [articles, setArticles] = useState([]);
+  const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [totalArticles, setTotalArticles] = useState(0);

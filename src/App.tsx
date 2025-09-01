@@ -16,8 +16,8 @@ import {
 import "./App.css";
 
 function App() {
-  const [articles, setArticles] = useState([]);
-  const [topics, setTopics] = useState([]);
+  const [, setArticles] = useState([]);
+  const [, setTopics] = useState([]);
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem("user");
     return savedUser
@@ -41,13 +41,13 @@ function App() {
   return (
     <BrowserRouter>
       <div className="App">
-        <Header />
+        <Header topic={null} />
         <NavBar user={user} />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/articles" element={<ArticlesList />} />
           <Route path="/articles/:article_id" element={<ArticleDetail user={user} />} />
-          <Route path="/topics" element={<Topics />} />
+          <Route path="/topics" element={<Topics topics={[]} />} />
           <Route path="/topics/:topic" element={<TopicArticles />} />
           <Route path="/users" element={<SignIn user={user} setUser={setUser} />} />
           <Route path="*" element={<ErrorMessage message="Page not found"/>} />

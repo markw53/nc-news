@@ -1,4 +1,4 @@
-function CommentsList({ comments, loadingComments, deletingCommentId, handleDeleteComment }) {
+function CommentsList({ comments, loadingComments, deletingCommentId, handleDeleteComment, deleteMessage }: CommentsList) {
   return (
     <section className="mt-5 pt-2 border-t border-gray-300">
       <h3 className="text-xl font-semibold mb-3">Comments</h3>
@@ -43,5 +43,13 @@ function CommentsList({ comments, loadingComments, deletingCommentId, handleDele
     </section>
   );
 }
+
+type CommentsList = {
+  comments: any;
+  loadingComments: any;
+  deletingCommentId: any;
+  handleDeleteComment: any;
+  deleteMessage: string;
+};
 
 export default CommentsList;

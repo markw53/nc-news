@@ -1,8 +1,19 @@
 import { useState, useEffect } from "react";
 import * as api from "../utils/api";
 
-const SignIn = ({ user, setUser }) => {
-  const [users, setUsers] = useState([]);
+type User = {
+  username: string;
+  name: string;
+  avatar_url: string;
+};
+
+interface SignInProps {
+  user: User | null;
+  setUser: (user: User | null) => void;
+}
+
+const SignIn = ({ user, setUser }: SignInProps) => {
+  const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 

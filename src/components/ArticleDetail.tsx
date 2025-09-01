@@ -11,13 +11,33 @@ import {
 
 function ArticleDetail({ user }) {
   const { article_id } = useParams();
-  const [article, setArticle] = useState(null);
-  const [comments, setComments] = useState([]);
+  type Article = {
+    article_id: number;
+    title: string;
+    body: string;
+    author: string;
+    topic: string;
+    created_at: string;
+    votes: number;
+    comment_count: number;
+    // Add other fields as needed
+  };
+
+  const [article, setArticle] = useState<Article | null>(null);
+  type Comment = {
+    comment_id: number;
+    author: string;
+    body: string;
+    created_at: string;
+    // Add other fields as needed
+  };
+
+  const [comments, setComments] = useState<Comment[]>([]);
   const [loadingArticle, setLoadingArticle] = useState(true);
   const [loadingComments, setLoadingComments] = useState(true);
   const [votes, setVotes] = useState(0);
   const [hasVoted, setHasVoted] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [commentSuccess, setCommentSuccess] = useState("");
   const [deletingCommentId, setDeletingCommentId] = useState(null);
   const [deleteMessage, setDeleteMessage] = useState("");
@@ -68,7 +88,7 @@ function ArticleDetail({ user }) {
     if (hasVoted || votes + delta < 0) return;
     setVotes((v) => v + delta);
     setHasVoted(true);
-    localStorage.setItem(`hasVoted_${article_id}`, true);
+    localStorage.setItem(`hasVoted_${article_id}`, "true");
 
     api.voteOnArticle(article_id, delta).catch(() => {
       setVotes((v) => v - delta);
