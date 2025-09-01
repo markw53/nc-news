@@ -21,66 +21,79 @@ function ArticleDetail() {
   const [deletingCommentId, setDeletingCommentId] = useState(null);
   const [deleteMessage, setDeleteMessage] = useState("");
 
-  const calculateReadingTime = (content) => {
-    const wordCount = content.split(" ").length;
-    const readingTimeInSeconds = wordCount / 3; 
+  const calculateReadingTime = (content = "") => {
+    if (!content) return null;
+    const wordCount = content.split(/\s+/).length;
+    const readingTimeInSeconds = wordCount / 3; // ~3 words/sec
     const minutes = Math.floor(readingTimeInSeconds / 60);
     const seconds = Math.round(readingTimeInSeconds % 60);
     return `${minutes} min ${seconds} sec`;
   };
 
   useEffect(() => {
+    // Fetch article
     api
       .fetchArticleById(article_id)
       .then((fetchedArticle) => {
-        setArticle(fetchedArticle);
-        setVotes(fetchedArticle.votes);
-        setLoadingArticle(false);
+        if (!fetchedArticle) {
+          setError("Article not found.");
+          setLoadingArticle(false);
+          return;
+        }
+        setArticle({
+          ...fetchedArticle,
+          votes: fetchedArticle.votes ?? 0,
+          comment_count: fetchedArticle.comment_count ?? 0,
+        });
+        setVotes(fetchedArticle.votes ?? 0);
       })
-      .catch((error) => {
-        console.error("Error fetching article:", error);
+      .catch((err) => {
+        console.error("Error fetching article:", err);
         setError("Failed to load article. Please try again later.");
-        setLoadingArticle(false);
-      });
+      })
+      .finally(() => setLoadingArticle(false));
 
+    // Fetch comments
     api
       .fetchCommentsByArticleId(article_id)
-      .then((fetchedComments) => {
-        setComments(fetchedComments);
-        setLoadingComments(false);
+      .then((fetchedComments = []) => {
+        setComments(fetchedComments || []);
       })
-      .catch((error) => {
-        console.error("Error fetching comments:", error);
+      .catch((err) => {
+        console.error("Error fetching comments:", err);
         setError("Failed to load comments. Please try again later.");
-        setLoadingComments(false);
-      });
+      })
+      .finally(() => setLoadingComments(false));
 
+    // Has user voted?
     const storedVoteState = localStorage.getItem(`hasVoted_${article_id}`);
-    if (storedVoteState) {
-      setHasVoted(true);
-    }
+    if (storedVoteState) setHasVoted(true);
   }, [article_id]);
 
   const handleVote = (voteChange) => {
     if (hasVoted || votes + voteChange < 0) return;
 
-    setVotes((prevVotes) => prevVotes + voteChange);
+    setVotes((prev) => prev + voteChange);
     setHasVoted(true);
 
     localStorage.setItem(`hasVoted_${article_id}`, true);
 
     api
       .voteOnArticle(article_id, voteChange)
-      .then(() => setHasVoted(false))
-      .catch((error) => {
-        setVotes((prevVotes) => prevVotes - voteChange);
+      .then((updatedArticle) => {
+        setVotes(updatedArticle?.votes ?? (votes + voteChange));
+        setHasVoted(false);
+      })
+      .catch((err) => {
+        console.error("Error casting vote:", err);
+        setVotes((prev) => prev - voteChange);
         setHasVoted(false);
         setError("Failed to update vote. Please try again.");
       });
   };
 
   const handleDeleteComment = (comment_id) => {
-    if (deletingCommentId) return;
+    if (deletingCommentId) return; // prevent duplicate calls
 
     setDeletingCommentId(comment_id);
     setDeleteMessage("");
@@ -88,13 +101,13 @@ function ArticleDetail() {
     api
       .deleteComment(comment_id)
       .then(() => {
-        setComments((prevComments) =>
-          prevComments.filter((comment) => comment.comment_id !== comment_id)
+        setComments((prev) =>
+          prev.filter((c) => c.comment_id !== comment_id)
         );
         setDeleteMessage("Comment deleted successfully.");
       })
-      .catch((error) => {
-        console.error("Error deleting comment:", error);
+      .catch((err) => {
+        console.error("Error deleting comment:", err);
         setDeleteMessage("Failed to delete comment. Please try again.");
         setError("Failed to delete comment. Please try again.");
       })
@@ -102,26 +115,30 @@ function ArticleDetail() {
   };
 
   const handleCommentPosted = (newComment) => {
-    if (submittedComments.has(newComment.body.trim())) {
+    const trimmedBody = newComment?.body?.trim();
+    if (!trimmedBody) return;
+
+    if (submittedComments.has(trimmedBody)) {
       setError("You have already posted this comment.");
       return;
     }
 
-    setComments((prevComments) => [newComment, ...prevComments]);
+    setComments((prev) => [newComment, ...prev]);
     setCommentSuccess("Comment posted successfully!");
-    setSubmittedComments((prev) => new Set(prev).add(newComment.body.trim()));
+    setSubmittedComments((prev) => new Set(prev).add(trimmedBody));
   };
 
   if (loadingArticle) return <p>Loading article...</p>;
   if (error) return <ErrorMessage message={error} aria-live="assertive" />;
+  if (!article) return <p>Article not found.</p>;
 
-  const readingTime = article ? calculateReadingTime(article.body) : null;
+  const readingTime = calculateReadingTime(article.body);
 
   return (
     <div
       className="article-detail-container"
       role="main"
-      aria-labelledby="article-title"
+      aria-labelledby={`article-title-${article.article_id}`}
     >
       <ArticleHeader article={article} />
 

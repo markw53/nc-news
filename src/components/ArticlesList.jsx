@@ -7,17 +7,23 @@ function ArticlesList() {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [totalArticles, setTotalArticles] = useState(0);
+  const [error, setError] = useState(null);
   const articlesPerPage = 6;
 
   useEffect(() => {
     setLoading(true);
+    setError(null);
+
     fetchArticles(page, articlesPerPage)
       .then(({ articles, total_count }) => {
-        setArticles(articles);
-        setTotalArticles(total_count);
-        setLoading(false);
+        setArticles(articles || []);                // ✅ fallback
+        setTotalArticles(total_count ?? 0);         // ✅ fallback
       })
-      .catch(() => setLoading(false));
+      .catch((err) => {
+        console.error("Error fetching articles:", err);
+        setError("Could not load articles. Please try again later.");
+      })
+      .finally(() => setLoading(false));
   }, [page]);
 
   const handleNextPage = () => {
@@ -33,6 +39,8 @@ function ArticlesList() {
   };
 
   if (loading) return <p>Loading articles...</p>;
+  if (error) return <p>{error}</p>;
+  if (!articles.length) return <p>No articles found.</p>;
 
   return (
     <section
@@ -43,7 +51,15 @@ function ArticlesList() {
 
       <div className="articles-grid" aria-label="Articles List">
         {articles.map((article) => (
-          <ArticleCard key={article.article_id} article={article} />
+          // ✅ Pass safe defaults into ArticleCard
+          <ArticleCard
+            key={article.article_id}
+            article={{
+              ...article,
+              votes: article.votes ?? 0,
+              comment_count: article.comment_count ?? 0,
+            }}
+          />
         ))}
       </div>
 
@@ -57,7 +73,7 @@ function ArticlesList() {
         </button>
 
         <span aria-live="polite">
-          Page {page} of {Math.ceil(totalArticles / articlesPerPage)}
+          Page {page} of {Math.max(1, Math.ceil(totalArticles / articlesPerPage))}
         </span>
 
         <button
