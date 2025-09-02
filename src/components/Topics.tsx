@@ -1,10 +1,19 @@
 import { Link } from "react-router-dom";
 
-function Topics({ topics }) {
+type Topic = {
+  slug: string;
+  description: string;
+};
+
+type Props = {
+  topics: Topic[];
+};
+
+function Topics({ topics }: Props) {
   return (
     <div className="p-5">
       <h2 className="text-2xl font-bold mb-3 text-nc-secondary">Select a Topic</h2>
-      {topics.length ? (
+      {topics.length > 0 ? (
         topics.map((t) => (
           <Link
             key={t.slug}

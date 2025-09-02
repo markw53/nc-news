@@ -11,13 +11,13 @@ import {
   TopicArticles,
   ErrorMessage,
   SignIn,
-} from "./components"; // all components from one line
+} from "./components";
 
 import "./App.css";
 
 function App() {
-  const [, setArticles] = useState([]);
-  const [, setTopics] = useState([]);
+  const [articles, setArticles] = useState([]);
+  const [topics, setTopics] = useState([]);
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem("user");
     return savedUser
@@ -31,11 +31,11 @@ function App() {
   });
 
   useEffect(() => {
-    fetchArticles().then(({ articles }) => setArticles(articles));
+    fetchArticles().then(({ articles }) => setArticles(articles || []));
   }, []);
 
   useEffect(() => {
-    fetchTopics().then((t) => setTopics(t));
+    fetchTopics().then((t) => setTopics(t || []));
   }, []);
 
   return (
@@ -43,14 +43,19 @@ function App() {
       <div className="App">
         <Header topic={null} />
         <NavBar user={user} />
+
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/articles" element={<ArticlesList />} />
-          <Route path="/articles/:article_id" element={<ArticleDetail user={user} />} />
-          <Route path="/topics" element={<Topics topics={[]} />} />
-          <Route path="/topics/:topic" element={<TopicArticles />} />
+          <Route path="/articles" element={<ArticlesList articles={articles} />} />
+          <Route path="/articles/:article_id"
+            element={<ArticleDetail user={user} articles={articles} />}
+          />          
+          {/* ✅ pass topics to components */}
+          <Route path="/topics" element={<Topics topics={topics} />} />
+          <Route path="/topics/:topic" element={<TopicArticles topics={topics} articles={articles} />} />
+
           <Route path="/users" element={<SignIn user={user} setUser={setUser} />} />
-          <Route path="*" element={<ErrorMessage message="Page not found"/>} />
+          <Route path="*" element={<ErrorMessage message="Page not found" />} />
         </Routes>
       </div>
     </BrowserRouter>

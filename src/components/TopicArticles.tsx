@@ -1,53 +1,50 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
-import { fetchArticlesByTopic } from "../utils/api";
-import {
-  ArticleCard,
-  ErrorMessage,
-} from ".";
+import { useParams } from "react-router-dom";
+import ArticleCard from "./ArticleCard";
 
-type Article = {
-  article_id: number;
-  // add other properties as needed
-  [key: string]: any;
+type Topic = {
+  slug: string;
+  description: string;
 };
 
-function TopicArticles() {
+type Article = {
+  article_id: string;
+  topic: string;
+  title: string;
+  author: string;
+  created_at: string | { seconds: number };
+  votes: number;
+  comment_count: number;
+  article_img_url?: string;
+};
+
+type Props = {
+  topics: Topic[];
+  articles: Article[];
+};
+
+function TopicArticles({ topics, articles }: Props) {
   const { topic } = useParams();
-  const [articles, setArticles] = useState<Article[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [searchParams] = useSearchParams();
-  const [error, setError] = useState("");
 
-  const sortBy = searchParams.get("sort_by") || "created_at";
-  const order = searchParams.get("order") || "desc";
+  if (!topic) return <p className="p-4">No topic selected.</p>;
 
-  useEffect(() => {
-    setLoading(true);
-    setError("");
+  const validTopic = topics.find((t) => t.slug === topic);
+  if (!validTopic) return <p className="p-4">Invalid topic.</p>;
 
-    fetchArticlesByTopic(topic, sortBy, order)
-      .then(({ articles = [] }) => {
-        setArticles(articles);
-      })
-      .catch((err) => {
-        console.error("Error fetching articles by topic:", err);
-        setError("Failed to load articles. Please try again later.");
-      })
-      .finally(() => setLoading(false));
-  }, [topic, sortBy, order]);
-
-  if (loading) return <p>Loading articles...</p>;
+  const filteredArticles = articles.filter((a) => a.topic === topic);
 
   return (
     <div className="p-5">
-  <h2 className="text-xl font-bold mb-3">Articles on “{topic}”</h2>
-  {articles.length ? (
-    <div className="flex flex-wrap justify-center gap-5">
-      {articles.map((a) => <ArticleCard key={a.article_id} article={a}/>)}
+      <h2 className="text-xl font-bold mb-3">Articles on “{topic}”</h2>
+      {filteredArticles.length > 0 ? (
+        <div className="flex flex-wrap justify-center gap-5">
+          {filteredArticles.map((article) => (
+            <ArticleCard key={article.article_id} article={article} />
+          ))}
+        </div>
+      ) : (
+        <p>No articles available for this topic.</p>
+      )}
     </div>
-  ) : <p>No articles available for this topic.</p>}
-</div>
   );
 }
 
